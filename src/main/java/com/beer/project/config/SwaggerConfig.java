@@ -1,5 +1,6 @@
 package com.beer.project.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -22,6 +23,7 @@ public class SwaggerConfig {
     private final String CONTACT_GITHUB = "https://github.com/DeVector/";
     private final String CONTACT_EMAIL = "diniz.vito@gmail.com";
 
+    @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()

@@ -2,12 +2,11 @@ package com.beer.project.mapper;
 
 import com.beer.project.model.Beer;
 import com.beer.project.model.dtos.BeerDTO;
-import com.beer.project.model.dtos.BeerDTO.BeerDTOBuilder;
 import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-06-15T12:31:11-0300",
+    date = "2022-06-15T16:25:00-0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.12 (Oracle Corporation)"
 )
 public class BeerMapperImpl implements BeerMapper {
@@ -36,15 +35,15 @@ public class BeerMapperImpl implements BeerMapper {
             return null;
         }
 
-        BeerDTOBuilder beerDTO = BeerDTO.builder();
+        BeerDTO beerDTO = new BeerDTO();
 
-        beerDTO.id( beer.getId() );
-        beerDTO.name( beer.getName() );
-        beerDTO.brand( beer.getBrand() );
-        beerDTO.max( beer.getMax() );
-        beerDTO.quantity( beer.getQuantity() );
-        beerDTO.beerType( beer.getBeerType() );
+        beerDTO.setId( beer.getId() );
+        beerDTO.setName( beer.getName() );
+        beerDTO.setBrand( beer.getBrand() );
+        beerDTO.setMax( beer.getMax() );
+        beerDTO.setQuantity( beer.getQuantity() );
+        beerDTO.setBeerType( beer.getBeerType() );
 
-        return beerDTO.build();
+        return beerDTO;
     }
 }
