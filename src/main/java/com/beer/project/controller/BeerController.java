@@ -1,6 +1,7 @@
 package com.beer.project.controller;
 
 import com.beer.project.exception.BeerAlreadyRegisteredException;
+import com.beer.project.exception.BeerNotFoundException;
 import com.beer.project.model.dtos.BeerDTO;
 import com.beer.project.service.BeerService;
 import lombok.AllArgsConstructor;
@@ -22,5 +23,12 @@ public class BeerController {
     public BeerDTO createBeer(@RequestBody @Valid BeerDTO dto) throws BeerAlreadyRegisteredException {
         return service.createBeer(dto);
     }
+
+    @GetMapping("/{name}")
+    public BeerDTO findByName(@PathVariable String name) throws BeerNotFoundException {
+        return service.findByName(name);
+    }
+
+
 
 }
