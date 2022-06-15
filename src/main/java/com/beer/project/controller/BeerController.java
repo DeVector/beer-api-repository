@@ -2,7 +2,9 @@ package com.beer.project.controller;
 
 import com.beer.project.exception.BeerAlreadyRegisteredException;
 import com.beer.project.exception.BeerNotFoundException;
+import com.beer.project.exception.BeerStockExceededException;
 import com.beer.project.model.dtos.BeerDTO;
+import com.beer.project.model.dtos.QuantityDTO;
 import com.beer.project.service.BeerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +36,13 @@ public class BeerController {
     public List<BeerDTO> findAll(){
         return service.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws BeerNotFoundException {
+        service.deleteById(id);
+    }
+
+    
 
 }
