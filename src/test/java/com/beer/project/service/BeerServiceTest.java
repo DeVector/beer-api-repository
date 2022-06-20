@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -95,4 +97,29 @@ public class BeerServiceTest {
 
     }
 
+    @Test
+    void whenListBeerIsCalledThenReturnAListOfBeers() {
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedBeer = mapper.toModel(beerDTO);
+
+        when(repository.findAll()).thenReturn(Collections.singletonList(expectedBeer));
+
+        List<BeerDTO> foundBeerDTO = service.findAll();
+
+        assertThat(foundBeerDTO, is(not(empty())));
+        assertThat(foundBeerDTO.get(0), is(equalTo(beerDTO)));
+
+    }
+
+    @Test
+    void whenListBeerIsCalledThenReturnAnEmptyList() {
+
+        when(repository.findAll()).thenReturn(Collections.EMPTY_LIST);
+
+        List<BeerDTO> foundBeerDTO = service.findAll();
+
+        assertThat(foundBeerDTO, is(empty()));
+
+    }
 }
