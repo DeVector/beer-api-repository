@@ -2,6 +2,7 @@ package com.beer.project.controller;
 
 import com.beer.project.builder.BeerDTOBuilder;
 import com.beer.project.exception.BeerAlreadyRegisteredException;
+import com.beer.project.exception.BeerNotFoundException;
 import com.beer.project.model.dtos.BeerDTO;
 import com.beer.project.service.BeerService;
 import org.hamcrest.Matchers;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,4 +86,29 @@ public class BeerControllerTest {
 
     }
 
+    @Test
+    void whenGetIsCalledWithValidNameThenOkStatusIsReturned() throws Exception {
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(service.findByName(beerDTO.getName())).thenReturn(beerDTO);
+
+        mockMvc.perform(get(BEER_API_URL_PATH + "/" + beerDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(beerDTO.getName())))
+                .andExpect(jsonPath("$.brand", is(beerDTO.getBrand())));
+    }
+
+    @Test
+    void whenGetIsCalledWithoutRegisteredNameThenNoutFoundStatusIsReturned() throws Exception {
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(service.findByName(beerDTO.getName())).thenThrow(BeerNotFoundException.class);
+
+        mockMvc.perform(get(BEER_API_URL_PATH + "/" + beerDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
