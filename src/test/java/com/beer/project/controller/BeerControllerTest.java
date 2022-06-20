@@ -70,4 +70,17 @@ public class BeerControllerTest {
 
     }
 
+    @Test
+    void whenPostIsCalledWithoutRequiredFieldThenAnErrorIsReturned() throws Exception {
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        beerDTO.setBrand(null);
+
+        mockMvc.perform(post(BEER_API_URL_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(beerDTO)))
+                .andExpect(status().isBadRequest());
+
+    }
+
 }
