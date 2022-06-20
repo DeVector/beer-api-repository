@@ -2,6 +2,7 @@ package com.beer.project.service;
 
 import com.beer.project.builder.BeerDTOBuilder;
 import com.beer.project.exception.BeerAlreadyRegisteredException;
+import com.beer.project.exception.BeerNotFoundException;
 import com.beer.project.mapper.BeerMapper;
 import com.beer.project.model.Beer;
 import com.beer.project.model.dtos.BeerDTO;
@@ -38,6 +39,7 @@ public class BeerServiceTest {
 
     @Test
     void whenBeerInformedThenItShuldBeCreated() throws BeerAlreadyRegisteredException {
+        //Validar a cerveja para a criação
 
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedSavedBeer = mapper.toModel(beerDTO);
@@ -55,6 +57,7 @@ public class BeerServiceTest {
 
     @Test
     void whenAlreadyRegisterBeerInformedThenExceptionShouldBeThrow() {
+        //Validar o throws quando a cerveja ja existe
 
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer duplicateBeer = mapper.toModel(beerDTO);
@@ -62,6 +65,33 @@ public class BeerServiceTest {
         when(repository.findByName(beerDTO.getName())).thenReturn(Optional.of(duplicateBeer));
 
         assertThrows(BeerAlreadyRegisteredException.class, () -> service.createBeer(beerDTO));
+
+    }
+
+    @Test
+    void whenValidBeerNameIsGivenThenReturnABeer() throws BeerNotFoundException {
+        //Validar para encontrar uma cerveja pelo nome
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer foundBeer = mapper.toModel(beerDTO);
+
+        when(repository.findByName(foundBeer.getName())).thenReturn(Optional.of(foundBeer));
+
+        BeerDTO foundBeerDTO = service.findByName(beerDTO.getName());
+
+        assertThat(foundBeerDTO, is(equalTo(beerDTO)));
+
+    }
+
+    @Test
+    void whenNotRegisteredBeerNameIsGivenThenThrowAnException() throws BeerNotFoundException {
+        //Validatar quando não encontra nenhuma cerveja no db pelo nome
+
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+
+        when(repository.findByName(beerDTO.getName())).thenReturn(Optional.empty());
+
+        assertThrows(BeerNotFoundException.class, () -> service.findByName(beerDTO.getName()));
 
     }
 
