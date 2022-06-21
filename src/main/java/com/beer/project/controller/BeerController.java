@@ -49,4 +49,10 @@ public class BeerController {
         return service.increment(id, quantityDTO.getQuantity());
     }
 
+    @PatchMapping("/{id}/decrement")
+    public BeerDTO decrement(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO)
+            throws BeerNotFoundException, BeerStockExceededException {
+        return service.decrement(id, quantityDTO.getQuantity());
+    }
+
 }
